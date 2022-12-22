@@ -1,0 +1,26 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- script: |
+    echo install init!!!
+    #curl -sfL https://releases.dagger.io/dagger/install.sh | sh
+    # globally
+    curl -sfL https://releases.dagger.io/dagger/install.sh | BIN_DIR=/usr/local/bin sh
+    echo install end!!!
+  displayName: 'Dagger install!'
+
+- script: |
+    echo dagger verify!!!
+    dagger version
+    echo docker verify!!!
+    docker version
+  displayName: 'Dagger verify'

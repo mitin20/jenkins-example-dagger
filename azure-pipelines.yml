@@ -25,13 +25,13 @@ steps:
     docker version
   displayName: 'Dagger verify'
 
-- script: |
-    echo dagger init!!!
-    dagger project init
-    dagger project update
-  displayName: 'Dagger init'  
+# - script: |
+#     echo dagger init!!!
+#     dagger project init
+#     dagger project update
+#   displayName: 'Dagger init'  
 
 - script: |
     echo dagger push!!!
-    dagger do push --log-format=plain
+    dagger run push
   displayName: 'Dagger push'

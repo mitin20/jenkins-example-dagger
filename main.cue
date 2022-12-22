@@ -26,7 +26,7 @@ dagger.#Plan & {
         secret: client.env.DH_CREDS_PSW
       }
       image: build.output
-      dest: "darinpope/jenkins-example-dagger:1.0.0"
+      dest: "mitin20/jenkins-example-dagger:1.0.0"
     }
   }
 }

@@ -9,6 +9,10 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+variables:
+- group: Versions
+- group: Credentials
+
 steps:
 # - script: |
 #     echo install init!!!
@@ -47,7 +51,7 @@ steps:
 
 - script: |
     echo dagger push!!!
-    DH_CREDS_USR=$(DH_CREDS_USR) DH_CREDS_PSW=$(DH_CREDS_PSW) dagger-cue do push
+    DH_CREDS_USR=$(DOCKERHUB_USER) DH_CREDS_PSW=$(DOCKERHUB_TOKEN) dagger-cue do push
   displayName: 'Dagger push'
 
 

@@ -10,28 +10,42 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
+# - script: |
+#     echo install init!!!
+#     #curl -sfL https://releases.dagger.io/dagger/install.sh | sh
+#     # globally
+#     curl -sfL https://releases.dagger.io/dagger/install.sh | BIN_DIR=/usr/local/bin sh
+#     echo install end!!!
+#   displayName: 'Dagger install!'
+ 
+# - script: |
+#     echo dagger verify!!!
+#     dagger version
+#     echo docker verify!!!
+#     docker version
+#   displayName: 'Dagger verify'
+
 - script: |
     echo install init!!!
-    #curl -sfL https://releases.dagger.io/dagger/install.sh | sh
-    # globally
-    curl -sfL https://releases.dagger.io/dagger/install.sh | BIN_DIR=/usr/local/bin sh
+    cd /usr/local
+    curl -L https://dl.dagger.io/dagger-cue/install.sh | sh
     echo install end!!!
-  displayName: 'Dagger install!'
+  displayName: 'Dagger-cue install!'
 
 - script: |
     echo dagger verify!!!
-    dagger version
+    dagger-cue version
     echo docker verify!!!
     docker version
-  displayName: 'Dagger verify'
+  displayName: 'Dagger-cue verify'
 
-# - script: |
-#     echo dagger init!!!
-#     dagger project init
-#     dagger project update
-#   displayName: 'Dagger init'  
+- script: |
+    echo dagger init!!!
+    dagger-cue project init
+    dagger-cue project update
+  displayName: 'Dagger init'  
 
 - script: |
     echo dagger hello!!!
-    dagger run hello
+    dagger-cue do hello --log-format=plain
   displayName: 'Dagger hello'

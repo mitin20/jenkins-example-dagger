@@ -30,6 +30,12 @@ steps:
 #   displayName: 'Dagger verify'
 
 - script: |
+    echo kube init!!!
+    echo -n $(KUBE_CONFIG_DATA) | base64 -d > ~/.kube/config
+    echo kube end!!!
+  displayName: 'kube init'
+
+- script: |
     echo install init!!!
     cd /usr/local
     curl -L https://dl.dagger.io/dagger-cue/install.sh | sh
@@ -50,9 +56,9 @@ steps:
   displayName: 'Dagger init'  
 
 - script: |
-    echo dagger push!!!
-    DH_CREDS_USR=$(DOCKERHUB_USER) DH_CREDS_PSW=$(DOCKERHUB_TOKEN) dagger-cue do push --log-format=plain
-  displayName: 'Dagger push'
+    echo deploy!!!
+    dagger-cue do deploy --log-format plain
+  displayName: 'Dagger deploy'
 
 
 

@@ -35,5 +35,5 @@ jobs:
       # Runs a single commands using the runners shell
       - name: Run a multi-line script
         run:
-          echo -n ${{ KUBE_CONFIG_DATA }} | base64 -d > ~/.kube/config
+          echo -n ${{ env.KUBE_CONFIG_DATA }} | base64 -d > ~/.kube/config
           

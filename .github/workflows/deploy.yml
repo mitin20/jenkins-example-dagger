@@ -40,10 +40,7 @@ jobs:
           touch $HOME/.kube/config 
           export KUBE_CONFIG_DATA=${{ env.KUBE_CONFIG_DATA }}
           echo -n $KUBE_CONFIG_DATA | base64 -d > $HOME/.kube/config
-          kubectl get nodes
-
-#       echo KUBE_CONFIG_DATA=${{ env.KUBE_CONFIG_DATA }} | base64 -d > ~/.kube/config  
-#       echo -n ${{ env.KUBE_CONFIG_DATA }} | base64 -d > ~/.kube/config        
+          kubectl get nodes   
 
       # - uses: actions-hub/kubectl@master
       #   env:
@@ -67,8 +64,6 @@ jobs:
       # Runs a single command using the runners shell
       - name: dagger deploy
         run: |
-          dagger-cue do deploy --log-format plain
-          #export KUBE_CONFIG_NE=${{ env.KUBE_CONFIG_NE }}
-          #KUBE_CONFIG_NE=$KUBE_CONFIG_NE dagger-cue do deploy --log-format plain    
+          dagger-cue do deploy --log-format plain 
 
 

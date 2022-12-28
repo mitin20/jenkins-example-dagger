@@ -63,6 +63,8 @@ jobs:
           
       # Runs a single command using the runners shell
       - name: dagger deploy
-        run: echo KUBE_CONFIG_NE=${{ env.KUBE_CONFIG_NE }} | dagger-cue do deploy --log-format plain        
+        run: |
+          export KUBE_CONFIG_NE=${{ env.KUBE_CONFIG_NE }}
+          KUBE_CONFIG_NE=$KUBE_CONFIG_NE dagger-cue do deploy --log-format plain        
 
 

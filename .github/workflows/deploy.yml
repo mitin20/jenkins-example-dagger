@@ -66,4 +66,12 @@ jobs:
         run: |
           dagger-cue do deploy --log-format plain 
 
+      # Runs a single command using the runners shell
+      - name: dagger ls
+        run: |
+          dagger-cue do ls --log-format plain 
 
+      # Runs a single command using the runners shell
+      - name: dagger inspect
+        run: |
+          dagger-cue do inspect --log-format plain 

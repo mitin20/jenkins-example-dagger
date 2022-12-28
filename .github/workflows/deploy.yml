@@ -33,9 +33,15 @@ jobs:
         run: curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 
       # Runs multiple commands using the runners shell
-      - name: kubectl config 
-        run: |
-          echo KUBE_CONFIG_DATA=${{ env.KUBE_CONFIG_DATA }} | base64 -d > ~/.kube/config
-          kubectl get nodes
+      #- name: kubectl config 
+      #  run: |
+      #    echo KUBE_CONFIG_DATA=${{ env.KUBE_CONFIG_DATA }} | base64 -d > ~/.kube/config
+      #    kubectl get nodes
   
-#echo -n ${{ env.KUBE_CONFIG_DATA }} | base64 -d > ~/.kube/config        
+      #echo -n ${{ env.KUBE_CONFIG_DATA }} | base64 -d > ~/.kube/config        
+
+      - uses: actions-hub/kubectl@master
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+        with:
+          args: get nodes

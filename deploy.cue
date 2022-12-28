@@ -12,7 +12,7 @@ dagger.#Plan & {
 			app:        "demo-app"
 			fs:         client.filesystem."./".read.contents
 			//kubeConfig: client.commands.kc.stdout
-                        KubeCinfig: client.env.KUBE_CONFIG_NE
+                        KubeConfig: client.env.KUBE_CONFIG_NE
 			file:       "./release/kubernetes-manifests.yaml"
 		}
 		ls: kapp.#List & {

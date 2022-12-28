@@ -35,7 +35,7 @@ jobs:
       # Runs multiple commands using the runners shell
       - name: kubectl config 
         run: |
-          #echo -n ${{ env.KUBE_CONFIG_DATA }} | base64 -d > ~/.kube/config
           echo KUBE_CONFIG_DATA=${{ env.KUBE_CONFIG_DATA }} | base64 -d > ~/.kube/config
           kubectl get nodes
-          
+  
+#echo -n ${{ env.KUBE_CONFIG_DATA }} | base64 -d > ~/.kube/config        

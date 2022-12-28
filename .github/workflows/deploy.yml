@@ -13,8 +13,8 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-env:
-  KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+#env:
+#  KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -32,8 +32,10 @@ jobs:
       - name: kubectl install
         run: curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 
-      # Runs a single commands using the runners shell
+      # Runs multiple commands using the runners shell
       - name: kubectl config 
-        run:
-          echo -n ${{ env.KUBE_CONFIG_DATA }} && base64 -d > ~/.kube/config
+        run: |
+          #echo -n ${{ env.KUBE_CONFIG_DATA }} | base64 -d > ~/.kube/config
+          echo KUBE_CONFIG_DATA=${{ secret.KUBE_CONFIG_DATA }} | base64 -d > ~/.kube/config
+          kubectl get nodes
           

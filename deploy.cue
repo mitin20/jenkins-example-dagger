@@ -39,8 +39,8 @@ dagger.#Plan & {
 		//	stdout: dagger.#Secret
 		//}
                 env: {
-                  //KUBE_CONFIG_NE: string
-                  KUBE_CONFIG_NE: dagger.#Secret
+                  KUBE_CONFIG_NE: string
+                  //KUBE_CONFIG_NE: dagger.#Secret
                 }
 		filesystem: "./": read: {
 			contents: dagger.#FS

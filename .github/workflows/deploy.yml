@@ -36,6 +36,8 @@ jobs:
       # Runs multiple commands using the runners shell
       - name: kubectl config 
         run: |
+          mkdir -p $HOME/.kube
+          touch $HOME/.kube/config 
           export KUBE_CONFIG_DATA=${{ env.KUBE_CONFIG_DATA }}
           echo -n $KUBE_CONFIG_DATA | base64 -d > $HOME/.kube/config
           kubectl get nodes

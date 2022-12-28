@@ -16,6 +16,8 @@ on:
 env:
   KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
 
+  KUBE_CONFIG_NE: ${{ secrets.KUBE_CONFIG_NE }}
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -61,6 +63,6 @@ jobs:
           
       # Runs a single command using the runners shell
       - name: dagger deploy
-        run: KUBE_CONFIG_NE=${{ secrets.KUBE_CONFIG_NE }} dagger-cue do deploy --log-format plain        
+        run: KUBE_CONFIG_NE=${{ env.KUBE_CONFIG_NE }} dagger-cue do deploy --log-format plain        
 
-#DH_CREDS_PSW=$(DOCKERHUB_TOKEN)
+

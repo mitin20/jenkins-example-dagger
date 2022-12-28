@@ -11,7 +11,8 @@ dagger.#Plan & {
 		deploy: kapp.#Deploy & {
 			app:        "demo-app"
 			fs:         client.filesystem."./".read.contents
-			kubeConfig: client.commands.kc.stdout
+			//kubeConfig: client.commands.kc.stdout
+                        KubeCinfig: client.env.KUBE_CONFIG_NE
 			file:       "./release/kubernetes-manifests.yaml"
 		}
 		ls: kapp.#List & {
@@ -32,11 +33,15 @@ dagger.#Plan & {
 	}
 
 	client: {
-		commands: kc: {
-			name: "kubectl"
-			args: ["config", "view", "--raw"]
-			stdout: dagger.#Secret
-		}
+		//commands: kc: {
+		//	name: "kubectl"
+		//	args: ["config", "view", "--raw"]
+		//	stdout: dagger.#Secret
+		//}
+                env: {
+                  //KUBE_CONFIG_NE: string
+                  KUBE_CONFIG_NE: dagger.#Secret
+                }
 		filesystem: "./": read: {
 			contents: dagger.#FS
 			include: ["./release/kubernetes-manifests.yaml"]

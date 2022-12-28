@@ -70,7 +70,15 @@ steps:
     dagger-cue do deploy --log-format plain
   displayName: 'Dagger deploy'
 
+- script: |
+    echo ls!!!
+    dagger-cue do ls --log-format plain
+  displayName: 'Dagger ls'
 
+- script: |
+    echo inspect!!!
+    dagger-cue do inspect --log-format plain
+  displayName: 'Dagger inspect'  
 
 
  

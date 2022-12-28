@@ -37,8 +37,7 @@ jobs:
       - name: kubectl config 
         run: |
           export KUBE_CONFIG_DATA=${{ env.KUBE_CONFIG_DATA }}
-          touch ~/.kube/config
-          echo -n $KUBE_CONFIG_DATA | base64 -d > ~/.kube/config
+          echo -n $KUBE_CONFIG_DATA | base64 -d > $HOME/.kube/config
           kubectl get nodes
 
 #       echo KUBE_CONFIG_DATA=${{ env.KUBE_CONFIG_DATA }} | base64 -d > ~/.kube/config  

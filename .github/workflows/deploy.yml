@@ -49,6 +49,7 @@ jobs:
       # Runs a single command using the runners shell
       - name: dagger install verify
         run: |
+          cd /usr/local
           curl -L https://dl.dagger.io/dagger-cue/install.sh | sh
           dagger-cue version
           

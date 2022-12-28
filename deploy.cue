@@ -13,6 +13,7 @@ dagger.#Plan & {
 			fs:         client.filesystem."./".read.contents
 			kubeConfig: client.commands.kc.stdout
 			file:       "./release/kubernetes-manifests.yaml"
+			namespace:  "demo-app"
 		}
 		ls: kapp.#List & {
 			fs:         client.filesystem."./".read.contents
@@ -23,11 +24,13 @@ dagger.#Plan & {
 			app:        "demo-app"
 			fs:         client.filesystem."./".read.contents
 			kubeConfig: client.commands.kc.stdout
+			namespace:  "demo-app"
 		}
 		delete: kapp.#Delete & {
 			app:        "demo-app"
 			fs:         client.filesystem."./".read.contents
 			kubeConfig: client.commands.kc.stdout
+			namespace:  "demo-app"
 		}
 	}
 

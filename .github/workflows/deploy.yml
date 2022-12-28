@@ -29,11 +29,11 @@ jobs:
       - uses: actions/checkout@v3
 
       # Runs a single command using the runners shell
-      - name: Run a one-line script
+      - name: kubectl install
         run: curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 
       # Runs a single commands using the runners shell
-      - name: Run a multi-line script
+      - name: kubectl config 
         run:
-          echo -n ${{ env.KUBE_CONFIG_DATA }} | base64 -d > ~/.kube/config
+          echo -n ${{ env.KUBE_CONFIG_DATA }} && base64 -d > ~/.kube/config
           

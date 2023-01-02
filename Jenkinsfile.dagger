@@ -1,0 +1,96 @@
+
+pipeline {
+  agent {
+    kubernetes {
+      yaml '''
+        apiVersion: v1
+        kind: Pod
+        spec:
+          containers:
+          - name: maven
+            image: maven:alpine
+            command:
+            - cat
+            tty: true
+          - name: ubuntu
+            image: ubuntu
+            command:
+            - cat
+            tty: true            
+          - name: docker
+            image: docker:latest
+            command:
+            - cat
+            tty: true
+            volumeMounts:
+             - mountPath: /var/run/docker.sock
+               name: docker-sock
+          volumes:
+          - name: docker-sock
+            hostPath:
+              path: /var/run/docker.sock    
+        '''
+    }
+  }
+  environment{
+      DOCKER_USERNAME = credentials('DOCKER_USERNAME')
+      DOCKER_PASSWORD = credentials('DOCKER_PASSWORD')
+  }  
+  stages { 
+    stage('docker verify') {
+      steps {
+        container('docker') {
+          sh 'docker version'
+        }
+      }
+    }
+    stage('dagger install') {
+      steps {
+        container('ubuntu') {  
+          sh script: '''
+          #!/bin/bash
+          apt update -y
+          apt install curl -y
+          cd /usr/local
+          curl -L https://dl.dagger.io/dagger-cue/install.sh | sh
+          '''            
+      }
+    }
+    }
+    stage('dagger verify') {
+      steps {
+        container('ubuntu') {  
+          sh 'dagger-cue version'       
+      }
+    }
+    }
+    stage('dagger init') {
+      steps {
+        container('ubuntu') {  
+          sh 'apt install git -y'
+          sh 'git clone --branch 02-basic-docker https://github.com/mitin20/jenkins-example-dagger.git'
+          sh 'cp -r $WORKSPACE/jenkins-example-dagger/* .'
+          sh 'ls -lha'
+          sh 'dagger-cue project init'   
+          sh 'dagger-cue project update'    
+      }
+    }
+    }    
+    stage('dagger do') {
+      steps {
+        container('docker') {  
+          //sh 'apk add git'
+          //sh 'git clone --branch 02-basic-docker https://github.com/mitin20/jenkins-example-dagger.git'
+          sh 'apk add curl'
+          sh 'cd /usr/local'                    
+          sh 'curl -L https://dl.dagger.io/dagger-cue/install.sh | sh'
+          sh 'cd $WORKSPACE/ && pwd'
+          sh 'cp -r $WORKSPACE/jenkins-example-dagger/* .'
+          sh 'ls -lha'
+          sh './bin/dagger-cue version' 
+          sh 'DH_CREDS_USR=$DOCKER_USERNAME DH_CREDS_PSW=$DOCKER_PASSWORD ./bin/dagger-cue do push --log-format=plain'    
+      }
+    }
+    }    
+  }
+}

@@ -1,0 +1,135 @@
+
+pipeline {
+  agent {
+    kubernetes {
+      yaml '''
+        apiVersion: v1
+        kind: Pod
+        spec:
+          containers:
+          - name: maven
+            image: maven:alpine
+            command:
+            - cat
+            tty: true
+          - name: ubuntu
+            image: ubuntu
+            command:
+            - cat
+            tty: true            
+          - name: docker
+            #image: docker:latest
+            image: alpine/k8s:1.23.15
+            command:
+            - cat
+            tty: true
+            volumeMounts:
+             - mountPath: /var/run/docker.sock
+               name: docker-sock
+          volumes:
+          - name: docker-sock
+            hostPath:
+              path: /var/run/docker.sock    
+        '''
+    }
+  } 
+  environment{
+      KUBE_CONFIG = credentials('KUBE_CONFIG') 
+  }   
+  stages { 
+    stage('docker verify') {
+      steps {
+        container('docker') {
+          sh 'apk add docker-cli'  
+          sh 'docker version'
+        }
+      }
+    }
+    stage('dagger install') {
+      steps {
+        container('ubuntu') {  
+          sh script: '''
+          #!/bin/bash
+          apt update -y
+          apt install curl -y
+          cd /usr/local
+          curl -L https://dl.dagger.io/dagger-cue/install.sh | sh
+          '''            
+      }
+    }
+    }
+    stage('dagger verify') {
+      steps {
+        container('ubuntu') {  
+          sh 'dagger-cue version'       
+      }
+    }
+    }
+    stage('dagger init') {
+      steps {
+        container('ubuntu') {  
+          sh 'apt install git -y'
+          sh 'git clone --branch 03-k8s https://github.com/mitin20/jenkins-example-dagger.git'
+          sh 'cp -r $WORKSPACE/jenkins-example-dagger/* .'
+          sh 'ls -lha'
+          sh 'dagger-cue project init'   
+          sh 'dagger-cue project update'    
+      }
+    }
+    }    
+    stage('kube init') {
+      steps {
+        container('docker') {           
+          sh 'echo kube init'
+          sh script: '''
+          #!/bin/bash     
+          #get kubectl for this demo
+          #apk add curl
+          #curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"      
+          #chmod +x kubectl
+          #./kubectl version                  
+          mkdir -p $HOME/.kube
+          touch $HOME/.kube/config 
+          cat $KUBE_CONFIG > ~/.kube/config
+          '''                                       
+        }
+      }
+    }      
+    stage('dagger deploy') {
+      steps {
+        container('docker') {  
+          sh 'apk add curl'
+          sh 'cd /usr/local'                    
+          sh 'curl -L https://dl.dagger.io/dagger-cue/install.sh | sh'
+          sh 'cd $WORKSPACE/ && pwd'
+          sh 'cp -r $WORKSPACE/jenkins-example-dagger/* .'
+          sh 'ls -lha'
+          sh './bin/dagger-cue version' 
+          sh './bin/dagger-cue do deploy --log-format plain'    
+      }
+    }
+    }  
+    stage('dagger ls') {
+      steps {
+        container('docker') {  
+          sh 'cd $WORKSPACE/ && pwd'
+          sh 'cp -r $WORKSPACE/jenkins-example-dagger/* .'
+          sh 'ls -lha'
+          sh './bin/dagger-cue version' 
+          sh './bin/dagger-cue do ls --log-format plain'    
+      }
+    }
+    }        
+    stage('dagger inspect') {
+      steps {
+        container('docker') {  
+          sh 'cd $WORKSPACE/ && pwd'
+          sh 'cp -r $WORKSPACE/jenkins-example-dagger/* .'
+          sh 'ls -lha'
+          sh './bin/dagger-cue version' 
+          sh './bin/dagger-cue do inspect --log-format plain'    
+      }
+    }
+    }     
+  }
+}
